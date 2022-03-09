@@ -67,7 +67,7 @@ import java_cup.runtime.Symbol;
             yybegin(YYINITIAL);
             return new Symbol(TokenConstants.ERROR, "EOF in String Constant");
         
-        case MULTI_LINE_COMMENT:
+        case COMMENT_MULTI_LINE:
             yybegin(YYINITIAL);
             return new Symbol(TokenConstants.ERROR, "EOF in Comment");
     }
@@ -131,7 +131,7 @@ VERTICAL_TAB = \013
 BACKSPACE = \b
 NULL_CHARACTER = \0
 SPACE = " "
-WHITESPACE = ({SPACE}|{FORMFEED}|{CARRIAGE_RETURN}|{TAB}|{VERTICAL_TAB})+
+WHITESPACE = ({SPACE}|{FROMFEED}|{CARRIAGE_RETURN}|{TAB}|{VERTICAL_TAB})+
 
 STRING = ({CHAR}|{DIGIT}|{WHITESPACE})*
 
@@ -147,7 +147,7 @@ ESCAPED_NEWLINE = {BACKSLASH}{NEWLINE}
 %%
 
 
-<YYINITIAL> {WHITESPACE} {/* Ignore whitespace */ }
+<YYINITIAL> {WHITESPACE} {}
 
 <YYINITIAL> {NEWLINE} {curr_lineno+=1;}
 <YYINITIAL> {VERTICAL_TAB} {curr_lineno+=1;}
@@ -160,18 +160,18 @@ ESCAPED_NEWLINE = {BACKSLASH}{NEWLINE}
 <YYINITIAL> {F}{I}                  {return new Symbol(TokenConstants.FI); }
 <YYINITIAL> {L}{O}{O}{P}            {return new Symbol(TokenConstants.LOOP); }
 <YYINITIAL> {P}{O}{O}{L}            {return new Symbol(TokenConstants.POOL); }
-<YYINITIAL> {f}{A}{L}{S}{E}         {return new Symbol(TokenConstants.FALSE); }
-<YYINITIAL> {t}{R}{U}{E}            {return new Symbol(TokenConstants.TRUE); }
+<YYINITIAL> {f}{A}{L}{S}{E}         {return new Symbol(TokenConstants.BOOL_CONST, java.lang.Boolean.FALSE); }
+<YYINITIAL> {t}{R}{U}{E}            {return new Symbol(TokenConstants.BOOL_CONST, java.lang.Boolean.FALSE); }
 <YYINITIAL> {I}{N}                  {return new Symbol(TokenConstants.IN); }
 <YYINITIAL> {L}{E}{T}               {return new Symbol(TokenConstants.LET); }
 <YYINITIAL> {W}{H}{I}{L}{E}         {return new Symbol(TokenConstants.WHILE); }
 <YYINITIAL> {N}{E}{W}               {return new Symbol(TokenConstants.NEW); }
 <YYINITIAL> {C}{A}{S}{E}            {return new Symbol(TokenConstants.CASE); }
 <YYINITIAL> {E}{S}{A}{C}            {return new Symbol(TokenConstants.ESAC); }
-<YYINITIAL> {N}{o}{T}               {return new Symbol(TokenConstants.NOT); }
+<YYINITIAL> {N}{O}{T}               {return new Symbol(TokenConstants.NOT); }
 <YYINITIAL> {O}{F}                  {return new Symbol(TokenConstants.OF); }
 <YYINITIAL> {I}{S}{V}{O}{I}{D}      {return new Symbol(TokenConstants.ISVOID); }
-<YYINITIAL> {I}{N}{H}{E}{R}{I}{T}{S}{return new Symbol(TokenConstants.INHERITS); }
+<YYINITIAL> {I}{N}{H}{E}{R}{I}{T}{S} {return new Symbol(TokenConstants.INHERITS); }
 
 <YYINITIAL> "("                      {return new Symbol(TokenConstants.LPAREN); }
 <YYINITIAL> ")"                      {return new Symbol(TokenConstants.RPAREN); }
@@ -311,11 +311,11 @@ ESCAPED_NEWLINE = {BACKSLASH}{NEWLINE}
 <COMMENT_MULTI_LINE>{NEWLINE}         {curr_lineno+=1;}
 <COMMENT_MULTI_LINE>{CARRIAGE_RETURN} {curr_lineno+=1;}
 <COMMENT_MULTI_LINE> {MULTI_LINE_COMMENT_END} {comment_depth-=1;
-                                                if (get_comment_depth()==1){
+                                                if (get_comment_depth()==0){
                                                     yybegin(YYINITIAL);
                                                 }}
 
 <YYINITIAL>{MULTI_LINE_COMMENT_END}   {return new Symbol(TokenConstants.ERROR, "Unmatched *)");}
 
-.                                     {System.err.println("LEXER BUG - UNMATCHED: " + yytext()); } /* This rule should be the very last in your lexical specification and will match match everything not matched by other lexical rules. */
+.                                     {System.err.println("LEXER BUG - UNMATCHED: " + yytext()); }
                                   
