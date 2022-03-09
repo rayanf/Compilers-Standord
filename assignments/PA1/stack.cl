@@ -75,6 +75,5 @@ class Main inherits IO {
                org_stack <- org_stack.push(input);}
             fi fi;
          }pool
-      
    };
 };
