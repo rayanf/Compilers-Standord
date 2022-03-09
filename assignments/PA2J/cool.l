@@ -71,13 +71,10 @@ import java_cup.runtime.Symbol;
 
 %%
 
-<YYINITIAL>"=>"			{ /* Sample lexical rule for "=>" arrow.
-                                     Further lexical rules should be defined
-                                     here, after the last %% separator */
-                                  return new Symbol(TokenConstants.DARROW); }
+<YYINITIAL> "=>"    {return new Symbol(TokenConstants.DARROW); }/* Sample lexical rule for "=>" arrow. Further lexical rules should be defined here, after the last %% separator */
 
-.                               { /* This rule should be the very last
-                                     in your lexical specification and
-                                     will match match everything not
-                                     matched by other lexical rules. */
-                                  System.err.println("LEXER BUG - UNMATCHED: " + yytext()); }
+
+
+
+.                   {System.err.println("LEXER BUG - UNMATCHED: " + yytext()); } /* This rule should be the very last in your lexical specification and will match match everything not matched by other lexical rules. */
+                                  
