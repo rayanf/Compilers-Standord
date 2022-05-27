@@ -48,6 +48,7 @@ module COOL[] begin
   constructor dispatch(expr : Expression; 
 		       name : Symbol;
 		       actual : Expressions) : Expression;
+           
   constructor cond(pred, then_exp, else_exp : Expression): Expression;
   constructor loop(pred, body: Expression) : Expression;
   constructor typcase(expr: Expression; cases: Cases): Expression;
